@@ -3,15 +3,12 @@
 
 	<h1>Twitter Meme Maker</h1>
 
-	{% if text %}
-		<p>{{text}}</p>
-	{% endif %}
-
-	<form action="{{url_for('home')}}" method="post">
+	<form action="{{url_for('make_meme')}}" enctype="multipart/form-data" method="post">
 		<p>Text:</p>
 		<textarea rows="4" cols="50" name="meme_text"></textarea>
+		<input type="file" accept="image/*" name="meme_image"></input>
 
-		<input type='submit' value='Create'>
+		<input type="submit" value='Create'>
 	</form>
 
 </body>
