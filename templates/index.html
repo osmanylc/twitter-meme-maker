@@ -3,13 +3,20 @@
 
 	<h1>Twitter Meme Maker</h1>
 
-	<form action="{{url_for('make_meme')}}" enctype="multipart/form-data" method="post">
-		<p>Text:</p>
-		<textarea rows="4" cols="50" name="meme_text"></textarea>
-		<input type="file" accept="image/*" name="meme_image"></input>
+	<p>Text:</p>
 
-		<input type="submit" value='Create'>
-	</form>
+	<textarea rows="3" cols="50" id="meme_text"></textarea>
 
+	<input type="file" accept="image/*" id="meme_image"></input>
+
+	<input id="create_button" type="button" value='Create'>
+
+
+
+	<script type="text/javascript" src="https://code.jquery.com/jquery-3.0.0.min.js" integrity="sha256-JmvOoLtYsmqlsWxa7mDSLMwa6dZ9rrIdtrrVYRnDRH0=" crossorigin="anonymous"></script>
+
+	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/rasterizehtml/1.2.2/rasterizeHTML.allinone.js"></script>
+
+	<script type="text/javascript" src="{{url_for('static', filename='make_meme.js')}}"></script>
 </body>
 </html>
