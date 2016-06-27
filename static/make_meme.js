@@ -18,7 +18,7 @@ var image_css = {"border-radius": "5px",
 
 var meme_container_css = {"background-color" : "#fff",
 						"width" : "500px", 
-						"padding" : "3px", 
+						"padding" : "10px", 
 					    "border-bottom" : "0", 
 					    "border-top-left-radius" : "5px", 
 					    "border-top-right-radius" : "5px",
@@ -32,7 +32,12 @@ function make_meme_html(text, image_url) {
 	var text_div = document.createElement("div");
 	var image_container = document.createElement("img");
 
+	//removes automatic padding and margin in the body element
+	var style = document.createElement("style");
+	style.innerHTML = "body {padding:0; margin:0}";
+
 	//build element hierarchy
+	div_container.appendChild(style);
 	$(text_div).append(text);
 	$(image_container).attr("src", image_url);
 	$(div_container).append(text_div);
@@ -69,34 +74,35 @@ $(document).ready(function() {
 			var meme_text = textarea.value;
 
 			var reader = new FileReader();
-			reader.onload = generateImage;
-
-			reader.readAsDataURL(meme_image);
-
-			function generateImage() {
+			reader.onload = function() {
 				var meme_image_url = reader.result;
 				var element = make_meme_html(meme_text, meme_image_url);
 
 				//used to get the size of the canvas
+				element.style.visibility = "hidden";
 				document.body.appendChild(element);
 				var bounding_rect = element.getBoundingClientRect();
-				//document.body.removeChild(element);
+				document.body.removeChild(element);
+				element.style.visibility = "";
 
-				//the extra 18 is added because of a bug in rasterizeHTML
-				var canvas_width = parseInt(bounding_rect.width, 10) + 16;
-				var canvas_height = parseInt(bounding_rect.height, 10) + 16;
+				var canvas_width = parseInt(bounding_rect.width, 10);
+				var canvas_height = parseInt(bounding_rect.height, 10);
 
+				//make canvas element
 				var canvas = document.createElement("canvas");
 				canvas.width = canvas_width;
 				canvas.height = canvas_height;
 				var ctx = canvas.getContext('2d');
 
+				//paint background white to prevent png transparency
 				ctx.fillStyle = 'white';
 				ctx.fillRect(0, 0, canvas_width, canvas_height);
 
+				//call rasterizeHTML with html we created
 				var html = element.outerHTML;
 				rasterizeHTML.drawHTML(html, canvas).then(function success(renderResult) {
-					var final_src = canvas.toDataURL('image/jpeg', 1.0);
+					//convert canvas to a png image and attach it to the page
+					var final_src = canvas.toDataURL();
 
 					var final_img = new Image();
 					final_img.src = final_src;
@@ -113,6 +119,8 @@ $(document).ready(function() {
 					console.log('there was an error');
 				});
 			};
+
+			reader.readAsDataURL(meme_image);
 		}
 		//If image or text missing, alert the user
 		else {
