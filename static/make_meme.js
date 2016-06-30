@@ -1,3 +1,5 @@
+var memePadding = 10;
+
 var textCSS = {"font-family" : "Helvetica Neue,Helvetica,Arial,sans-serif",
                 "font-size" : "26px",
                 "line-height" : "32px",
@@ -18,12 +20,12 @@ var imageCSS = {"border-radius": "5px",
 
 var memeContainerCSS = {"background-color" : "#fff",
                         "width" : "500px", 
-                        "padding" : "10px", 
+                        "padding" : memePadding + "px", 
                         "border-bottom" : "0", 
                         "border-top-left-radius" : "5px", 
                         "border-top-right-radius" : "5px",
                         "overflow": "hidden", 
-                        "display": "inline-block"
+                        "display": "block"
                     };
 
 //define elements
@@ -83,6 +85,28 @@ function setMemeHTML(memeText, memeImageDataURI) {
     }
 }
 
+function getImageDownloadContainer(imgSrc) {
+    var divisionLine = document.createElement("hr");
+    var downloadBtn = document.createElement("a");
+    var downloadGlyphicon = document.createElement("span");
+    var meme = document.createElement("img");
+
+    $(downloadGlyphicon).addClass("glyphicon glyphicon-download-alt");
+
+    downloadBtn.appendChild(downloadGlyphicon);
+    downloadBtn.innerHTML += ' Download';
+    downloadBtn.href = imgSrc;
+    downloadBtn.download = "meme_" + Date.now();
+
+    meme.src = imgSrc;
+
+    $(downloadBtn).addClass("btn btn-lg btn-block action-button");
+    $(meme).addClass("image");
+    $(meme).attr("id", "meme");
+
+    return [divisionLine, meme, downloadBtn];
+}
+
 function createMemeAfterImageIsURI(memeText, reader) {
     return function () {
         var memeImageDataURI = reader.result;
@@ -91,12 +115,12 @@ function createMemeAfterImageIsURI(memeText, reader) {
         //used to get the size of the canvas
         memeContainer.style.visibility = "hidden";
         document.body.appendChild(memeContainer);
-        var boundingRect = memeContainer.getBoundingClientRect();
+
+        var canvasWidth = $(memeContainer).outerWidth() + 2*memePadding;
+        var canvasHeight = $(memeContainer).outerHeight();
+        
         document.body.removeChild(memeContainer);
         memeContainer.style.visibility = "";
-
-        var canvasWidth = parseInt(boundingRect.width, 10);
-        var canvasHeight = parseInt(boundingRect.height, 10);
 
         //make canvas element
         var canvas = document.createElement("canvas");
@@ -112,17 +136,14 @@ function createMemeAfterImageIsURI(memeText, reader) {
         var html = memeContainer.outerHTML;
         rasterizeHTML.drawHTML(html, canvas).then(function success(renderResult) {
             //convert canvas to a png image and attach it to the page
-            var finalSrc = canvas.toDataURL();
-            var finalImg = new Image();
-            finalImg.src = finalSrc;
+            var memeSrc = canvas.toDataURL();
 
-            var a = document.createElement('a');
-            a.innerHTML = 'Download';
-            a.href = finalSrc;
-            a.download = "meme_" + Date.now();
-
-            document.body.appendChild(finalImg);
-            document.body.appendChild(a);
+            if($("#download-container").length == 0) {
+                var downloadMemeElts = getImageDownloadContainer(memeSrc);
+                $("#main-content").append(downloadMemeElts);
+            } else {
+                $("#meme").attr("src", finalSrc);
+            }
         }, function error(e) {
                 console.log('there was an error');
         });

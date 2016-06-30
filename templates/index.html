@@ -1,16 +1,27 @@
-<html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+	<link href="https://fonts.googleapis.com/css?family=Lato|Raleway" rel="stylesheet">
+	<link rel="stylesheet" href="{{url_for('static', filename='style.css')}}">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
 <body>
+	<div id="main-content" class="content-area">
+		<h1 id="title">Twitter Meme Maker</h1>
 
-	<h1>Twitter Meme Maker</h1>
+		<div class="form-group">
+			<label for="meme_text">Meme Text</label>
+			<textarea class="form-control" rows="3" cols="35" id="meme_text"></textarea>
+		</div>
 
-	<p>Text:</p>
+		<div class="form-group">
+			<label for="meme_image">Meme Image</label>
+			<input type="file" accept="image/*" id="meme_image"></input>
+		</div>
 
-	<textarea rows="3" cols="50" id="meme_text"></textarea>
-
-	<input type="file" accept="image/*" id="meme_image"></input>
-
-	<input id="create_button" type="button" value='Create'>
-
+		<input class="btn btn-lg btn-block action-button" id="create_button" type="button" value='Create'>
+	</div>
 
 
 	<script type="text/javascript" src="https://code.jquery.com/jquery-3.0.0.min.js" integrity="sha256-JmvOoLtYsmqlsWxa7mDSLMwa6dZ9rrIdtrrVYRnDRH0=" crossorigin="anonymous"></script>

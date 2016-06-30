@@ -1,0 +1,85 @@
+body::before {
+	content: "";
+	position: fixed;
+	left: 0;
+	top:0;
+	right:0;
+	bottom:0;
+	z-index: -1;
+
+	/* Background pattern from subtlepatterns.com */
+	background-image: url("http://subtlepatterns2015.subtlepatterns.netdna-cdn.com/patterns/congruent_pentagon.png");
+	filter: blur(3px);
+	-webkit-filter: blur(3px);
+}
+
+.content-area {
+	background-color : rgba(248,255,248,0.7);
+	margin: 50px;
+	padding: 0px 30px 30px 30px;
+	border: 1px solid rgba(28,20,13,0.5);
+	border-radius: 30px;
+	margin-top: 2em;
+	margin-right: auto;
+	margin-left: auto;
+	max-width: 400px;
+}
+
+#title {
+	font-family: 'Lato', sans-serif;
+	text-align: center;
+	margin-bottom: 0.75em;
+}
+
+#meme_text {
+	border : 1px solid rgba(28,20,13,0.50);
+	resize: none;
+	font-family: inherit;
+	font-size: 13pt;
+}
+
+input:focus, #meme_text:focus{
+	outline: none !important;
+	border : 1px solid rgba(28,20,13, 0.5) !important;
+	box-shadow : 0px 0px 5px 1px rgba(28,20,13,0.25) !important;
+	transition: border 0.1s, box-shadow 0.1s !important;
+}
+
+.action-button {
+	font-family: 'Raleway', sans-serif;
+	display: block;
+	margin: 0 auto;
+	background-color : inherit;
+	color : #1C140D;
+	border: 1px solid rgba(28,20,13,0.5);
+	font-size: 14pt;
+	transition: background-color 0.2s, color 0.2s;
+}
+
+.action-button:hover {
+	background-color : rgba(28,20,13,0.90);
+	color : #F2E9E1;
+	transition: background-color 0.2s, color 0.2s;
+}
+
+.action-button:active {
+	background-color: rgba(28,20,13,0.80);
+}
+
+.download-content {
+	padding: 30px;
+}
+
+hr {
+  border: 0; 
+  height: 1px; 
+  background-image: -webkit-linear-gradient(left, rgba(28,20,13,0.20), rgba(28,20,13,0.90), rgba(28,20,13,0.20));
+  background-image: -moz-linear-gradient(left, rgba(28,20,13,0.20), rgba(28,20,13,0.90), rgba(28,20,13,0.20));
+  background-image: -ms-linear-gradient(left, rgba(28,20,13,0.20), rgba(28,20,13,0.90), rgba(28,20,13,0.20));
+  background-image: -o-linear-gradient(left, rgba(28,20,13,0.20), rgba(28,20,13,0.90), rgba(28,20,13,0.20));
+}
+
+.image {
+	max-width: 100%;
+	margin-bottom: 20px;
+}
