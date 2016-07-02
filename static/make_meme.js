@@ -50,6 +50,8 @@ $(imageContainer).css(imageCSS);
 $(document).ready(function() {
     // Fires when the "Create" button is clicked
     $('#create_button').click(onClickCreate);
+
+    $( "#tabs-container" ).tabs();
 });
 
 function onClickCreate() {
@@ -95,6 +97,7 @@ function getImageDownloadContainer(imgSrc) {
 
     downloadBtn.appendChild(downloadGlyphicon);
     downloadBtn.innerHTML += ' Download';
+    downloadBtn.id = "download-meme";
     downloadBtn.href = imgSrc;
     downloadBtn.download = "meme_" + Date.now();
 
@@ -138,11 +141,12 @@ function createMemeAfterImageIsURI(memeText, reader) {
             //convert canvas to a png image and attach it to the page
             var memeSrc = canvas.toDataURL();
 
-            if($("#download-container").length == 0) {
+            if($("#meme").length == 0) {
                 var downloadMemeElts = getImageDownloadContainer(memeSrc);
                 $("#main-content").append(downloadMemeElts);
             } else {
-                $("#meme").attr("src", finalSrc);
+                $("#meme").attr("src", memeSrc);
+                $("#download-meme").attr("href", memeSrc);
             }
         }, function error(e) {
                 console.log('there was an error');
