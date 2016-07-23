@@ -10,41 +10,39 @@
 	<div id="main-content" class="content-area">
 		<h1 id="title">Twitter Meme Maker</h1>
 
-		<div id="tabs-container">
-			<ul>
-				<li><a href="#tweet-link-tab">Link</a></li>
-				<li><a href="#text-and-image-tab">Text+Image</a></li>
-			</ul>
+		<p id="missing-warning" class="bg-danger" style="display: none">Image or Text Missing</p>
 
-			<div id="tweet-link-tab">
-				<div class="form-group">
-					<label for="tweet-link">Tweet Link</label>
-					<input type="text"></input>
-				</div>
-			</div>
+		<div class="form-group">
+			<label for="meme_text">Meme Text</label>
+			<textarea class="form-control" rows="3" cols="35" id="meme-text-input"></textarea>
+		</div>
 
-			<div id="text-and-image-tab">
-				<div class="form-group">
-					<label for="meme_text">Meme Text</label>
-					<textarea class="form-control" rows="3" cols="35" id="meme_text"></textarea>
-				</div>
-
-				<div class="form-group">
-					<label for="meme_image">Meme Image</label>
-					<input type="file" accept="image/*" id="meme_image"></input>
-				</div>
-			</div>
+		<div class="form-group">
+			<label for="meme_image">Meme Image</label>
+			<input type="file" accept="image/*" id="meme-image-input"></input>
 		</div>
 
 		<input class="btn btn-lg btn-block action-button" id="create_button" type="button" value='Create'>
+
+		<div id="download-content" style="display:none">
+			<hr>
+
+			<img id="meme" class="image">
+			<a id="download-meme-button" class="btn btn-lg btn-block action-button">
+				<span class="glyphicon glyphicon-download-alt"></span> Download
+			</a>
+		</div>
 	</div>
 
+
+	<div id="meme-container" style="display:none">
+		<div id="meme-text"></div>
+		<img id="meme-image">
+	</div>
 
 	<script type="text/javascript" src="https://code.jquery.com/jquery-3.0.0.min.js" integrity="sha256-JmvOoLtYsmqlsWxa7mDSLMwa6dZ9rrIdtrrVYRnDRH0=" crossorigin="anonymous"></script>
 
 	<script type="text/javascript" src={{url_for('static', filename='jquery-ui.min.js')}}></script>
-
-	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
 
 	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/rasterizehtml/1.2.2/rasterizeHTML.allinone.js"></script>
 
