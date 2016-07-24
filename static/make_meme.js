@@ -61,7 +61,6 @@ function createMemeAfterImageIsURI(memeText, reader) {
         //get the size of the canvas
         var canvasWidth = $(memeContainer).outerWidth();
         var canvasHeight = $(memeContainer).outerHeight();
-        console.log(canvasWidth);
 
         //make canvas element
         var canvas = document.createElement("canvas");
