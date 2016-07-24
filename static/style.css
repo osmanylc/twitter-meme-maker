@@ -31,10 +31,21 @@ body::before {
 	margin-top: 0em;
 }
 
-input[type="text"], #meme_text {
+.alert {
+	padding: 8px;
+	filter: opacity(90%);
+	-webkit-filter: opacity(90%);
+}
+
+#meme-text-input {
 	border: 1px solid rgba(28,20,13,0.5);
-	font-family: inherit;
-	font-size: 13pt;
+	font-family : "Helvetica Neue" , "Helvetica" , "Arial", "sans-serif";
+	font-size : 16px;
+    line-height : 20px;
+    font-weight : 400; 
+    letter-spacing : .01em; 
+    word-wrap : break-word; 
+    color : #292f33;
 }
 
 input[type="text"] {
@@ -96,4 +107,15 @@ hr {
 .image {
 	max-width: 100%;
 	margin-bottom: 20px;
+}
+
+footer {
+	position: absolute;
+	bottom: 0px;
+	margin: 5px;
+	right: 10px;
+}
+
+address {
+	margin: 0px;
 }

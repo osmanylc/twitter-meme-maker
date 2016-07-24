@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+	<title>Twitter Meme Maker</title>
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
 	<link href="https://fonts.googleapis.com/css?family=Lato|Raleway" rel="stylesheet">
 	<link rel="stylesheet" href={{url_for('static', filename='style.css')}}>
@@ -10,7 +11,7 @@
 	<div id="main-content" class="content-area">
 		<h1 id="title">Twitter Meme Maker</h1>
 
-		<p id="missing-warning" class="bg-danger" style="display: none">Image or Text Missing</p>
+		<p id="missing-warning" class="alert alert-danger" style="display: none">Image or text missing.</p>
 
 		<div class="form-group">
 			<label for="meme_text">Meme Text</label>
@@ -40,6 +41,13 @@
 		<img id="meme-image">
 	</div>
 
+
+	<footer>
+		<address>Contact: 
+			<a href="mailto:twitter.meme.maker@gmail.com">twitter.meme.maker@gmail.com</a>
+		</address>
+	</footer>
+
 	<script type="text/javascript" src="https://code.jquery.com/jquery-3.0.0.min.js" integrity="sha256-JmvOoLtYsmqlsWxa7mDSLMwa6dZ9rrIdtrrVYRnDRH0=" crossorigin="anonymous"></script>
 
 	<script type="text/javascript" src={{url_for('static', filename='jquery-ui.min.js')}}></script>
@@ -47,5 +55,8 @@
 	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/rasterizehtml/1.2.2/rasterizeHTML.allinone.js"></script>
 
 	<script type="text/javascript" src={{url_for('static', filename='make_meme.js')}}></script>
+
+	<!-- Go to www.addthis.com/dashboard to customize your tools -->
+	<script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-5793ebf3d22a7113"></script>
 </body>
 </html>
