@@ -2,48 +2,52 @@
 <html lang="en">
 <head>
 	<title>Twitter Meme Maker</title>
+	<link rel="icon" href={{url_for('static', filename='images/favicon.ico')}} type="image/x-icon">
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
 	<link href="https://fonts.googleapis.com/css?family=Lato|Raleway" rel="stylesheet">
 	<link rel="stylesheet" href={{url_for('static', filename='style.css')}}>
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 </head>
 <body>
-	<div id="main-content" class="content-area">
-		<h1 id="title">Twitter Meme Maker</h1>
+	<div id="container">
 
-		<p id="missing-warning" class="alert alert-danger" style="display: none">Image or text missing.</p>
+		<div id="body">
+			<div id="main-content" class="content-area">
+				<h1 id="title">Twitter Meme Maker</h1>
 
-		<div class="form-group">
-			<label for="meme_text">Meme Text</label>
-			<textarea class="form-control" rows="3" cols="35" id="meme-text-input"></textarea>
+				<p id="missing-warning" class="alert alert-danger" style="display: none">Image or text missing.</p>
+
+				<div class="form-group">
+					<label for="meme_text">Meme Text</label>
+					<textarea class="form-control" rows="3" cols="35" id="meme-text-input"></textarea>
+				</div>
+
+				<div class="form-group">
+					<label for="meme_image">Meme Image</label>
+					<input type="file" accept="image/*" id="meme-image-input"></input>
+				</div>
+
+				<input class="btn btn-lg btn-block action-button" id="create_button" type="button" value='Create'>
+
+				<div id="download-content" style="display:none">
+					<hr>
+
+					<img id="meme" class="image">
+					<a id="download-meme-button" class="btn btn-lg btn-block action-button">
+						<span class="glyphicon glyphicon-download-alt"></span> Download
+					</a>
+				</div>
+			</div>
 		</div>
-
-		<div class="form-group">
-			<label for="meme_image">Meme Image</label>
-			<input type="file" accept="image/*" id="meme-image-input"></input>
-		</div>
-
-		<input class="btn btn-lg btn-block action-button" id="create_button" type="button" value='Create'>
-
-		<div id="download-content" style="display:none">
-			<hr>
-
-			<img id="meme" class="image">
-			<a id="download-meme-button" class="btn btn-lg btn-block action-button">
-				<span class="glyphicon glyphicon-download-alt"></span> Download
-			</a>
+		
+		<div id="footer">
+			Contact: <a href="mailto:twitter.meme.maker@gmail.com">twitter.meme.maker@gmail.com</a>
 		</div>
 	</div>
-
 
 	<div id="meme-container" style="display:none">
 		<div id="meme-text"></div>
 		<img id="meme-image">
-	</div>
-
-
-	<div id="footer">
-		Contact: <a href="mailto:twitter.meme.maker@gmail.com">twitter.meme.maker@gmail.com</a>
 	</div>
 
 	<script type="text/javascript" src="https://code.jquery.com/jquery-3.0.0.min.js" integrity="sha256-JmvOoLtYsmqlsWxa7mDSLMwa6dZ9rrIdtrrVYRnDRH0=" crossorigin="anonymous"></script>
