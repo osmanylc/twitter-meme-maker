@@ -30,25 +30,50 @@ function onClickCreate() {
 }
 
 function setMemeHTML(memeText, memeImageDataURI) {
-    var imageContainer = document.getElementById('meme-image');
+    return new Promise(function (resolve, reject) {
+        var placeholderImg = new Image();
 
-    document.getElementById('meme-text').innerHTML = memeText;
-    imageContainer.src = memeImageDataURI;
+        document.getElementById('meme-text').innerHTML = memeText;
+        placeholderImg.onload = function () {
+            resolve(placeholderImg);
+        };
+        placeholderImg.src = memeImageDataURI;
 
-    //make sure image doesn't go over the height and width limits.
-    //also preserves image proportions.
-    if (imageContainer.naturalHeight > imageContainer.naturalWidth) {
-        $(imageContainer).css({"height" : "450px", "width" : "auto"});
-    } else {
-        $(imageContainer).css({"width" : "480px", "height" : "auto"});
-    }
+    }).then(function(placeholderImg) {
+        var imageContainer = document.getElementById('meme-image');
+        var imageContainerSrc = placeholderImg.src;
+        //make sure image doesn't go over the height and width limits.
+        if (placeholderImg.naturalHeight > placeholderImg.naturalWidth) {
+            imageContainerSrc = cropImageVertically(placeholderImg.cloneNode());
+            $(imageContainer).css({"height" : "450px", "width": "auto"}); 
+        } else {
+            $(imageContainer).css({"width" : "480px", "height": "auto"});
+        }
+        imageContainer.src = imageContainerSrc;
+    });
 }
 
-function createStyleSheetLink(link) {
-    var ss = document.createElement("link");
-    ss.type = "text/css";
-    ss.rel = "stylesheet";
-    ss.href = "meme_style.css";
+function cropImageVertically(imageContainer) {
+    var imgHeight = imageContainer.naturalHeight;
+    var imgWidth = imageContainer.naturalWidth;
+    
+    var maxRatio = 1.35;
+    var ratio = imgHeight / imgWidth;
+
+    if(ratio > maxRatio) {
+        var newHeight = Math.floor(imgWidth * (maxRatio - 0.075));
+        var gutterValue = (imgHeight - newHeight) / 4;
+
+        var canvas = document.createElement('canvas');
+        canvas.width = imgWidth;
+        canvas.height = newHeight;
+        var ctx = canvas.getContext('2d');
+
+        ctx.drawImage(imageContainer, 0, gutterValue, imgWidth, newHeight, 0, 0, imgWidth, newHeight);
+        return canvas.toDataURL();
+    } else {
+        return imageContainer.src;
+    }
 }
 
 function createMemeAfterImageIsURI(memeText, reader) {
@@ -56,50 +81,44 @@ function createMemeAfterImageIsURI(memeText, reader) {
         var memeImageDataURI = reader.result;
         var memeContainer = document.getElementById('meme-container');
 
-        setMemeHTML(memeText, memeImageDataURI);
+        setMemeHTML(memeText, memeImageDataURI).then(function() {
+            //get the size of the canvas
+            var canvasWidth = $(memeContainer).outerWidth();
+            var canvasHeight = $(memeContainer).outerHeight();
 
-        //get the size of the canvas
-        var canvasWidth = $(memeContainer).outerWidth();
-        var canvasHeight = $(memeContainer).outerHeight();
+            //make canvas element
+            var canvas = document.createElement("canvas");
+            canvas.width = canvasWidth;
+            canvas.height = canvasHeight;
+            var ctx = canvas.getContext('2d');
 
-        //make canvas element
-        var canvas = document.createElement("canvas");
-        canvas.width = canvasWidth;
-        canvas.height = canvasHeight;
-        var ctx = canvas.getContext('2d');
+            //paint background white to prevent png transparency
+            ctx.fillStyle = 'white';
+            ctx.fillRect(0, 0, canvasWidth, canvasHeight);
 
-        //paint background white to prevent png transparency
-        ctx.fillStyle = 'white';
-        ctx.fillRect(0, 0, canvasWidth, canvasHeight);
+            /* Call rasterizeHTML with html we created */
+            var htmlElement = memeContainer.cloneNode(true);
+            htmlElement.style.display = "block";
 
-        //call rasterizeHTML with html we created
-        var canvasDocument = document.implementation.createHTMLDocument();
-        canvasDocument.body.appendChild(memeContainer.cloneNode(true));
+            return {'htmlElement' : htmlElement, 'canvas' : canvas};
+        }).then(function (result) {
+            dom2canvas(result.htmlElement, result.canvas).then(function (canvas) {
+                var memeSrc = canvas.toDataURL();
 
-        //fixes the extra margin added by default
-        var marginFixStyle = document.createElement('style');
-        marginFixStyle.innerHTML = "body {margin: 0; padding: 0;}";
-        canvasDocument.head.appendChild(marginFixStyle);
+                var downloadContent = document.getElementById('download-content');
+                var downloadButton = document.getElementById('download-meme-button');
+                var downloadMemeImage = document.getElementById('meme');
 
-        canvasDocument.getElementById('meme-container').style.display = "block";
+                downloadButton.href = memeSrc;
+                downloadButton.download = 'meme_' + Date.now();
+                downloadMemeImage.src = memeSrc;
 
-        rasterizeHTML.drawDocument(canvasDocument, canvas).then(function success(renderResult) {
-            //convert canvas to a png image and attach it to the page
-            var memeSrc = canvas.toDataURL();
-
-            var downloadContent = document.getElementById('download-content');
-            var downloadButton = document.getElementById('download-meme-button');
-            var downloadMemeImage = document.getElementById('meme');
-
-            downloadButton.href = memeSrc;
-            downloadButton.download = 'meme_' + Date.now();
-            downloadMemeImage.src = memeSrc;
-
-            if(downloadContent.style.display == "none") {
-                downloadContent.style.display = "block";
-            }
-        }, function error(e) {
-                console.log('there was an error');
+                if(downloadContent.style.display == "none") {
+                    downloadContent.style.display = "block";
+                }
+            });
+        }).catch(function (error) {
+            console.log(error);
         });
     };
 }
