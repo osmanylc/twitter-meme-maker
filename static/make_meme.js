@@ -34,49 +34,16 @@ function onClickCreate() {
 
 function setMemeHTML(memeText, memeImageDataURI) {
     return new Promise(function (resolve, reject) {
-        var placeholderImg = new Image();
-
         document.getElementById('meme-text').innerHTML = memeText;
-        placeholderImg.onload = function () {
-            resolve(placeholderImg);
-        };
-        placeholderImg.src = memeImageDataURI;
 
-    }).then(function(placeholderImg) {
         var imageContainer = document.getElementById('meme-image');
-        var imageContainerSrc = placeholderImg.src;
-
-        var imgHeight = placeholderImg.naturalHeight;
-        var imgWidth = placeholderImg.naturalWidth;
-        var maxRatio = 1.33;
-
-        //make sure image doesn't go over the height and width limits.
-        if (imgHeight > imgWidth * maxRatio) {
-            imageContainerSrc = cropIfNarrow(placeholderImg, maxRatio);
-        }
-
-        $(imageContainer).css({"width" : "480px", "height": "auto"});
-        imageContainer.src = imageContainerSrc;
+        imageContainer.onload = function() {
+            $(imageContainer).css({"width" : "480px", "height": "auto"});
+            resolve();
+        };
+        imageContainer.src = memeImageDataURI;
     });
 }
-
-
-function cropIfNarrow(img, maxRatio) {
-    var imgHeight = img.naturalHeight;
-    var imgWidth = img.naturalWidth;
-
-    var newHeight = Math.floor(imgWidth * (maxRatio - 0.075));
-    var gutterValue = (imgHeight - newHeight) / 2;
-
-    var canvas = document.createElement('canvas');
-    canvas.width = imgWidth;
-    canvas.height = newHeight;
-    var ctx = canvas.getContext('2d');
-
-    ctx.drawImage(img, 0, gutterValue, imgWidth, newHeight, 0, 0, imgWidth, newHeight);
-    return canvas.toDataURL();
-}
-
 
 function createMemeAfterImageIsURI(memeText, reader) {
     var memeImageDataURI = reader.result;
@@ -101,9 +68,7 @@ function createMemeAfterImageIsURI(memeText, reader) {
         var htmlElement = memeContainer.cloneNode(true);
         htmlElement.style.display = "block";
 
-        return {'htmlElement' : htmlElement, 'canvas' : canvas};
-    }).then(function (result) {
-        dom2canvas(result.htmlElement, result.canvas).then(function(canvas) {
+        dom2canvas(htmlElement, canvas).then(function(canvas) {
             var memeSrc = canvas.toDataURL();
 
             var downloadContent = document.getElementById('download-content');
@@ -118,8 +83,6 @@ function createMemeAfterImageIsURI(memeText, reader) {
                 downloadContent.style.display = "block";
             }
         });
-    }).catch(function (error) {
-        console.log(error);
     });
 }
 
