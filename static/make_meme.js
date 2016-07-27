@@ -69,7 +69,7 @@ function createMemeAfterImageIsURI(memeText, reader) {
         htmlElement.style.display = "block";
 
         dom2canvas(htmlElement, canvas).then(function(canvas) {
-            var memeSrc = canvas.toDataURL();
+            var memeSrc = canvas.toDataURL("image/jpeg");
 
             var downloadContent = document.getElementById('download-content');
             var downloadButton = document.getElementById('download-meme-button');
@@ -89,13 +89,12 @@ function createMemeAfterImageIsURI(memeText, reader) {
 
 var memeTextCSS = {"font-family" : "Helvetica Neue,Helvetica,Arial,sans-serif",
                 "margin": "5px 10px 0px 10px",
-                "font-size" : "26px",
-                "line-height" : "32px",
+                "font-size" : "28px",
+                "line-height" : "30px",
                 "font-weight" : "300", 
                 "letter-spacing" : ".01em", 
-                "word-wrap" : "break-word", 
                 "color" : "#292f33", 
-                "width" : "inherit"
+                "width" : "480px"
             };
 
 var memeImageCSS = {"border-radius": "5px", 
