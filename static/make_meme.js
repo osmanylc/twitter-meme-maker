@@ -8,6 +8,7 @@ $(function() {
     $('#create_button').click(onClickCreate);
 });
 
+
 function onClickCreate() {
     var memeTextArea = document.getElementById('meme-text-input');
     var memeImageInput = document.getElementById('meme-image-input');
@@ -20,14 +21,16 @@ function onClickCreate() {
         missingWarning.style.display = "none";
 
         var reader = new FileReader();
-        reader.onload = createMemeAfterImageIsURI(memeText, reader);
+        reader.onload = function () {
+            createMemeAfterImageIsURI(memeText, reader);  
+        };
         reader.readAsDataURL(memeImage);
     }
     else {
-        //TODO add style to warning sign
          missingWarning.style.display = "block";
     }
 }
+
 
 function setMemeHTML(memeText, memeImageDataURI) {
     return new Promise(function (resolve, reject) {
@@ -42,86 +45,84 @@ function setMemeHTML(memeText, memeImageDataURI) {
     }).then(function(placeholderImg) {
         var imageContainer = document.getElementById('meme-image');
         var imageContainerSrc = placeholderImg.src;
+
+        var imgHeight = placeholderImg.naturalHeight;
+        var imgWidth = placeholderImg.naturalWidth;
+        var maxRatio = 1.33;
+
         //make sure image doesn't go over the height and width limits.
-        if (placeholderImg.naturalHeight > placeholderImg.naturalWidth) {
-            imageContainerSrc = cropImageVertically(placeholderImg.cloneNode());
-            $(imageContainer).css({"height" : "450px", "width": "auto"}); 
-        } else {
-            $(imageContainer).css({"width" : "480px", "height": "auto"});
+        if (imgHeight > imgWidth * maxRatio) {
+            imageContainerSrc = cropIfNarrow(placeholderImg, maxRatio);
         }
+
+        $(imageContainer).css({"width" : "480px", "height": "auto"});
         imageContainer.src = imageContainerSrc;
     });
 }
 
-function cropImageVertically(imageContainer) {
-    var imgHeight = imageContainer.naturalHeight;
-    var imgWidth = imageContainer.naturalWidth;
-    
-    var maxRatio = 1.35;
-    var ratio = imgHeight / imgWidth;
 
-    if(ratio > maxRatio) {
-        var newHeight = Math.floor(imgWidth * (maxRatio - 0.075));
-        var gutterValue = (imgHeight - newHeight) / 4;
+function cropIfNarrow(img, maxRatio) {
+    var imgHeight = img.naturalHeight;
+    var imgWidth = img.naturalWidth;
 
-        var canvas = document.createElement('canvas');
-        canvas.width = imgWidth;
-        canvas.height = newHeight;
-        var ctx = canvas.getContext('2d');
+    var newHeight = Math.floor(imgWidth * (maxRatio - 0.075));
+    var gutterValue = (imgHeight - newHeight) / 2;
 
-        ctx.drawImage(imageContainer, 0, gutterValue, imgWidth, newHeight, 0, 0, imgWidth, newHeight);
-        return canvas.toDataURL();
-    } else {
-        return imageContainer.src;
-    }
+    var canvas = document.createElement('canvas');
+    canvas.width = imgWidth;
+    canvas.height = newHeight;
+    var ctx = canvas.getContext('2d');
+
+    ctx.drawImage(img, 0, gutterValue, imgWidth, newHeight, 0, 0, imgWidth, newHeight);
+    return canvas.toDataURL();
 }
+
 
 function createMemeAfterImageIsURI(memeText, reader) {
-    return function () {
-        var memeImageDataURI = reader.result;
-        var memeContainer = document.getElementById('meme-container');
+    var memeImageDataURI = reader.result;
+    var memeContainer = document.getElementById('meme-container');
 
-        setMemeHTML(memeText, memeImageDataURI).then(function() {
-            //get the size of the canvas
-            var canvasWidth = $(memeContainer).outerWidth();
-            var canvasHeight = $(memeContainer).outerHeight();
+    setMemeHTML(memeText, memeImageDataURI).then(function() {
+        //get the size of the canvas
+        var canvasWidth = Math.floor($(memeContainer).outerWidth());
+        var canvasHeight = Math.floor($(memeContainer).outerHeight());
 
-            //make canvas element
-            var canvas = document.createElement("canvas");
-            canvas.width = canvasWidth;
-            canvas.height = canvasHeight;
-            var ctx = canvas.getContext('2d');
+        //make canvas element
+        var canvas = document.createElement("canvas");
+        canvas.width = canvasWidth;
+        canvas.height = canvasHeight;
+        var ctx = canvas.getContext('2d');
 
-            //paint background white to prevent png transparency
-            ctx.fillStyle = 'white';
-            ctx.fillRect(0, 0, canvasWidth, canvasHeight);
+        //paint background white to prevent png transparency
+        ctx.fillStyle = 'white';
+        ctx.fillRect(0, 0, canvasWidth, canvasHeight);
 
-            /* Call rasterizeHTML with html we created */
-            var htmlElement = memeContainer.cloneNode(true);
-            htmlElement.style.display = "block";
+        /* Call dom2canvas with html we created */
+        var htmlElement = memeContainer.cloneNode(true);
+        htmlElement.style.display = "block";
 
-            return {'htmlElement' : htmlElement, 'canvas' : canvas};
-        }).then(function (result) {
-            dom2canvas(result.htmlElement, result.canvas).then(function (canvas) {
-                var memeSrc = canvas.toDataURL();
+        return {'htmlElement' : htmlElement, 'canvas' : canvas};
+    }).then(function (result) {
+        dom2canvas(result.htmlElement, result.canvas).then(function(canvas) {
+            var memeSrc = canvas.toDataURL();
 
-                var downloadContent = document.getElementById('download-content');
-                var downloadButton = document.getElementById('download-meme-button');
-                var downloadMemeImage = document.getElementById('meme');
+            var downloadContent = document.getElementById('download-content');
+            var downloadButton = document.getElementById('download-meme-button');
+            var downloadMemeImage = document.getElementById('meme');
 
-                downloadButton.href = memeSrc;
-                downloadButton.download = 'meme_' + Date.now();
-                downloadMemeImage.src = memeSrc;
+            downloadButton.href = memeSrc;
+            downloadButton.download = 'meme_' + Date.now();
+            downloadMemeImage.src = memeSrc;
 
-                if(downloadContent.style.display == "none") {
-                    downloadContent.style.display = "block";
-                }
-            });
-        }).catch(function (error) {
-            console.log(error);
+            if(downloadContent.style.display == "none") {
+                downloadContent.style.display = "block";
+            }
         });
-    };
+    }).catch(function (error) {
+        console.log(error);
+    });
 }
+
 
 var memeTextCSS = {"font-family" : "Helvetica Neue,Helvetica,Arial,sans-serif",
                 "margin": "5px 10px 0px 10px",

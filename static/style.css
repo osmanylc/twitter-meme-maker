@@ -8,12 +8,13 @@ body::before {
 	z-index: -1;
 
 	/* Background pattern from subtlepatterns.com */
-	background-image: url("images/congruent_pentagon.png");
-	background: linear-gradient(0deg, rgb(255,124,133), rgb(245,201,160), rgb(148,220,187));
+	background-size: 100% 100%;
+	background-image: url("images/gradient.png");
+	/*background: linear-gradient(0deg, rgb(255,124,133), rgb(245,201,160), rgb(148,220,187));*/
 }
 
 .content-area {
-	background-color : rgba(248,255,248,0.7);
+	background-color : rgba(248,248,248,0.7);
 	margin: 50px;
 	padding: 30px;
 	/*border: 1px solid rgba(28,20,13,0.9);*/
